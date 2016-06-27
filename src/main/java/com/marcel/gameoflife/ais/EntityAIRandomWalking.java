@@ -2,12 +2,7 @@ package com.marcel.gameoflife.ais;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathFinder;
-import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -16,20 +11,17 @@ import net.minecraft.util.math.Vec3d;
 public class EntityAIRandomWalking extends EntityAIBase {
     private EntityCreature walker;
     private Vec3d randomPos;
+
+    private int runRange = 20;
     private boolean debug;
 
     public EntityAIRandomWalking(EntityCreature walker){
         this.walker = walker;
         this.debug = false;
-//        this.setMutexBits(8);
     }
 
     @Override
     public boolean shouldExecute() {
-        /*if(debug){
-            System.out.println("EXECUTION?");
-        }*/
-
         if(!this.walker.getNavigator().noPath()){
             if(debug){
                 System.out.println("No execution!");
@@ -38,15 +30,6 @@ public class EntityAIRandomWalking extends EntityAIBase {
             return false;
         }
         else{
-            Vec3d pos = walker.getPositionVector();
-            int randx = walker.getRNG().nextInt() % 20;
-            int randz = walker.getRNG().nextInt() % 20;
-
-            this.randomPos = new Vec3d(pos.xCoord+randx, pos.yCoord, pos.zCoord+randz);
-
-            /*if(debug)
-                System.out.println("Execute");*/
-
             return true;
         }
     }
@@ -54,18 +37,7 @@ public class EntityAIRandomWalking extends EntityAIBase {
     @Override
     public void startExecuting(){
         if(debug)
-        System.out.println("START EXECUTION");
-
-        boolean state = this.walker.getNavigator().tryMoveToXYZ(randomPos.xCoord, randomPos.yCoord, randomPos.zCoord,2.0);
-
-        if(!state){
-            if(debug)
-            System.out.println("NO PATH!");
-            this.walker.getNavigator().setPath(
-                   walker.getNavigator().getPathToXYZ(
-                           randomPos.xCoord, randomPos.yCoord, randomPos.zCoord),
-                   2.0);
-        }
+            System.out.println("START EXECUTION");
     }
 
     @Override
@@ -74,7 +46,6 @@ public class EntityAIRandomWalking extends EntityAIBase {
 
         if(player != null){
             if(this.walker.getDistanceToEntity(player) < 5.0){
-//                System.out.println(this.walker.getDistanceToEntity(player));
                 debug = true;
             }
             else{
@@ -82,5 +53,32 @@ public class EntityAIRandomWalking extends EntityAIBase {
             }
         }
 
+        if(shouldExecute()){
+            this.startWalking();
+        }
+
+    }
+
+    public void startWalking(){
+        Vec3d pos = walker.getPositionVector();
+        int randx = walker.getRNG().nextInt() % 20;
+        int randz = walker.getRNG().nextInt() % 20;
+
+        int chose = walker.getRNG().nextInt() % 2;
+
+        if(chose == 0){
+            randx *= (-1);
+            randz *= (-1);
+        }
+
+        this.randomPos = new Vec3d(pos.xCoord+randx, pos.yCoord, pos.zCoord+randz);
+
+        boolean state = this.walker.getNavigator().tryMoveToXYZ(randomPos.xCoord, randomPos.yCoord, randomPos.zCoord,2.0);
+
+        if(!state){
+            if(debug)
+                System.out.println("NO PATH!");
+
+        }
     }
 }

@@ -62,23 +62,14 @@ public class EventHandler {
         for(EntitySheep sheep: sheeps){
             sheep.tasks.taskEntries.clear();
             sheep.targetTasks.taskEntries.clear();
-            sheep.tasks.addTask(0, new EntityAISimpleEatGrass(sheep, 100));
-            sheep.tasks.addTask(1, new EntityAIRandomWalking(sheep));
+            sheep.tasks.addTask(1, new EntityAISimpleEatGrass(sheep, 50));
+            sheep.tasks.addTask(0, new EntityAIRandomWalking(sheep));
 //            sheep.targetTasks.addTask(1, new EntityAIRandomWalking(sheep));
         }
 
         Vec3d pos = new Vec3d(200, 4, 200);
 
         player.setPositionAndUpdate(pos.xCoord, pos.yCoord, pos.zCoord);
-
-        /*for(int i = 0; i < height; i++){
-            for(int j=0; j<length; j++){
-                for(int k = 0; k < width; k++){
-                    pos.add(i, j, k);
-                    player.worldObj.setBlockState(pos, Blocks.SANDSTONE.getDefaultState());
-                }
-            }
-        }*/
 
 
 
