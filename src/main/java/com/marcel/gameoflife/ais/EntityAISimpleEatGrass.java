@@ -11,21 +11,25 @@ import net.minecraft.util.math.BlockPos;
  */
 public class EntityAISimpleEatGrass extends EntityAIBase {
     private EntityLiving grassEater;
-    int eatTimer;
-    int timerDefault;
-    int noEatSurvive;
+    private int noEatSurvive;
 
-    public EntityAISimpleEatGrass(EntityLiving grassEater, int timer){
+    private long startTime;
+    private long eatTime;
+
+
+    public EntityAISimpleEatGrass(EntityLiving grassEater, long millis){
         this.grassEater = grassEater;
-        this.timerDefault = timer;
         this.noEatSurvive = 3;
         this.setMutexBits(8);
+
+        this.startTime = System.currentTimeMillis();
+        this.eatTime = millis;
     }
 
     @Override
     public boolean shouldExecute() {
-        if(this.eatTimer <= 0){
-            this.eatTimer = this.timerDefault;
+        if(System.currentTimeMillis()-this.startTime >= this.eatTime){
+            this.startTime = System.currentTimeMillis();
             return true;
         }
 
@@ -40,19 +44,21 @@ public class EntityAISimpleEatGrass extends EntityAIBase {
             this.grassEater.worldObj.playEvent(2001, pos, Block.getIdFromBlock(Blocks.GRASS));
             this.grassEater.worldObj.setBlockState(pos, Blocks.DIRT.getDefaultState(), 2);
         }
-        else{
+        /*else{
             this.noEatSurvive--;
 
             if(this.noEatSurvive == 0){
                 this.grassEater.setHealth(0);
             }
-        }
+        }*/
 
     }
 
     @Override
     public void updateTask(){
-        this.eatTimer--;
+        if(shouldExecute()){
+            startExecuting();
+        }
     }
 
 

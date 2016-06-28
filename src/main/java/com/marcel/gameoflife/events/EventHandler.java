@@ -9,7 +9,6 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -38,12 +37,18 @@ public class EventHandler {
 
     private static ModConfig CONFIG;
 
-    @SubscribeEvent
-    public void init(GuiScreenEvent.InitGuiEvent event){
+    public EventHandler(){
         if(CONFIG == null){
             CONFIG = new ModConfig();
         }
+
+        if(SHEEP_HANDLER == null){
+            SHEEP_HANDLER = new SheepHandler();
+        }
     }
+
+    @SubscribeEvent
+    public void init(GuiScreenEvent.InitGuiEvent event){}
 
     @SubscribeEvent
     public void logIn(PlayerEvent.PlayerLoggedInEvent event){
@@ -53,10 +58,6 @@ public class EventHandler {
 
         if(PLAYER == null){
             PLAYER = event.player;
-        }
-
-        if(SHEEP_HANDLER == null){
-            SHEEP_HANDLER = new SheepHandler();
         }
 
         List<EntitySheep> sheeps =  WORLD.getEntities(EntitySheep.class, new Predicate<EntitySheep>() {
@@ -85,7 +86,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void placeBlock(BlockEvent.PlaceEvent event){
-        PLAYER.addChatComponentMessage(new TextComponentString(PLAYER.getDisplayNameString()+" placed block at "+event.getPos()));
+//        PLAYER.addChatComponentMessage(new TextComponentString(PLAYER.getDisplayNameString()+" placed block at "+event.getPos()));
     }
 
     @SubscribeEvent
