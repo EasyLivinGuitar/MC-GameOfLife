@@ -17,7 +17,6 @@ public class GameOfLifeMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         MinecraftForge.EVENT_BUS.register(new EventHandler());
-//        GameRegistry.registerItem(new FirstItem("firstitem"),"firstitem");
     }
 
 }

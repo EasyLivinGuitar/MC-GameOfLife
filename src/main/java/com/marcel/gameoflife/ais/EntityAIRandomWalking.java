@@ -1,7 +1,7 @@
 package com.marcel.gameoflife.ais;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.Vec3d;
 
@@ -9,13 +9,13 @@ import net.minecraft.util.math.Vec3d;
  * Created by marcel on 24.06.16.
  */
 public class EntityAIRandomWalking extends EntityAIBase {
-    private EntityCreature walker;
+    private EntityLiving walker;
     private Vec3d randomPos;
 
     private int runRange = 20;
     private boolean debug;
 
-    public EntityAIRandomWalking(EntityCreature walker){
+    public EntityAIRandomWalking(EntityLiving walker){
         this.walker = walker;
         this.debug = false;
     }
@@ -46,7 +46,7 @@ public class EntityAIRandomWalking extends EntityAIBase {
 
         if(player != null){
             if(this.walker.getDistanceToEntity(player) < 5.0){
-                debug = true;
+//                debug = true;
             }
             else{
                 debug = false;
