@@ -1,8 +1,9 @@
 package com.marcel.gameoflife.events;
 
-import com.google.common.base.Predicate;
 import com.marcel.gameoflife.config.ModConfig;
 import com.marcel.gameoflife.handler.SheepHandler;
+import com.marcel.gameoflife.hudelements.PopulationStats;
+import com.marcel.gameoflife.misc.predicates.PassThrough;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntitySheep;
@@ -11,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -19,16 +21,19 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
  * Created by kipu5728 on 6/22/16.
  */
+
 public class EventHandler {
     private static World WORLD;
     private static EntityPlayer PLAYER;
@@ -36,6 +41,9 @@ public class EventHandler {
     private SheepHandler SHEEP_HANDLER;
 
     private static ModConfig CONFIG;
+
+    private PopulationStats STATS;
+    private Map<String, Integer> currentStats;
 
     public EventHandler(){
         if(CONFIG == null){
@@ -48,7 +56,10 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public void init(GuiScreenEvent.InitGuiEvent event){}
+    public void init(GuiScreenEvent.InitGuiEvent event){
+        STATS = new PopulationStats();
+        currentStats = new ConcurrentHashMap<String, Integer>();
+    }
 
     @SubscribeEvent
     public void logIn(PlayerEvent.PlayerLoggedInEvent event){
@@ -60,12 +71,7 @@ public class EventHandler {
             PLAYER = event.player;
         }
 
-        List<EntitySheep> sheeps =  WORLD.getEntities(EntitySheep.class, new Predicate<EntitySheep>() {
-            @Override
-            public boolean apply(@Nullable EntitySheep input) {
-                return true;
-            }
-        });
+        List<EntitySheep> sheeps =  WORLD.getEntities(EntitySheep.class, new PassThrough<EntitySheep>());
 
         for(EntitySheep sheep: sheeps){
             SHEEP_HANDLER.initAI(sheep);
@@ -120,6 +126,23 @@ public class EventHandler {
             }
     }
 
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void render(RenderGameOverlayEvent.Post event){
+        if(currentStats != null){
+            STATS.drawStats(currentStats);
+        }
+    }
+
+    @SubscribeEvent
+    public void tick(TickEvent.WorldTickEvent event){
+        if(WORLD != null) {
+            for (Class entityType : CONFIG.DISPLAY_ENTITY_POPULATION) {
+                currentStats.put(entityType.getSimpleName(), WORLD.getEntities(entityType, new PassThrough()).size());
+            }
+        }
+    }
+
     @SubscribeEvent
     public void initEntity(EntityEvent.EntityConstructing event){
     }
@@ -130,8 +153,6 @@ public class EventHandler {
         if(CONFIG.SHEEP_SPAWN_BUTTON.isPressed()){
 
             EntitySheep sheep = new EntitySheep(WORLD);
-
-            System.out.println(PLAYER.getLookVec());
 
             sheep.setPosition(PLAYER.getLookVec().xCoord + PLAYER.posX,
                     PLAYER.getLookVec().yCoord + PLAYER.posY + 1,
