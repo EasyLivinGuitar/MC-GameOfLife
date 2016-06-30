@@ -51,11 +51,14 @@ public class EventHandler {
 
     private List<Entity> spawnQueue;
 
+    private boolean killAll;
+
     public EventHandler(){
         CONFIG = new ModConfig();
         SHEEP_HANDLER = new SheepHandler();
 
         spawnQueue = new ArrayList<Entity>();
+        killAll = false;
     }
 
     @SubscribeEvent
@@ -123,10 +126,24 @@ public class EventHandler {
 
     @SubscribeEvent
     public void update(LivingEvent.LivingUpdateEvent event){
-        if(!(event.getEntity() instanceof EntitySheep) && !(event.getEntity() instanceof EntityWolf))
-            if(event.getEntity() instanceof EntityLiving){
-                ((EntityLiving)event.getEntity()).setHealth(0);
+        if(event.getEntity() instanceof EntityLiving) {
+            if(!killAll) {
+                if(!(event.getEntity().getClass().getSimpleName().equals("EntitySheep"))
+                        && !(event.getEntity().getClass().getSimpleName().equals("EntityWolf"))) {
+//                    ((EntityLiving)event.getEntity()).setHealth(0);
+                    WORLD.removeEntity(event.getEntity());
+                }
             }
+            else{
+                if(WORLD!=null){
+                    WORLD.removeEntity(event.getEntity());
+                }
+            }
+        }
+
+        if(STATS.getStat("EntitySheep")==0 && STATS.getStat("EntityWolf")==0){
+            killAll = false;
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -142,7 +159,8 @@ public class EventHandler {
         if(WORLD != null) {
             for (Class entityType : CONFIG.DISPLAY_ENTITY_POPULATION) {
                 try{
-                    currentStats.put(entityType.getSimpleName(), WORLD.getEntities(entityType, new PassThrough()).size());
+//                    currentStats.put(entityType.getSimpleName(), WORLD.getEntities(entityType, new PassThrough()).size());
+                    currentStats.put(entityType.getSimpleName(), WORLD.countEntities(entityType));
                 }
                 catch (Exception e){
                     System.out.println("ERROR: Unable to get stats.");
@@ -210,6 +228,8 @@ public class EventHandler {
                     CONFIG.HOME_POS.zCoord);
 
             WORLD.setWorldTime(1000);
+
+//            killAll = true;
 
             for(int i = (int) CONFIG.WALL_START_POS.xCoord; i <= CONFIG.WALL_END_POS.xCoord; i++){
                 for(int j = (int) CONFIG.WALL_START_POS.yCoord; j <= CONFIG.WALL_END_POS.yCoord; j++){
