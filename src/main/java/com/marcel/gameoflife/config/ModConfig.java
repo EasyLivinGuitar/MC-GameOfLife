@@ -21,6 +21,12 @@ public class ModConfig {
     public static Vec3d WALL_START_POS = new Vec3d(266, 4, 196);
     public static Vec3d WALL_END_POS = new Vec3d(285, 6, 196);
 
+    public static Vec3d ARENA_START_POS = new Vec3d(264, 3, 176);
+    public static Vec3d ARENA_END_POS = new Vec3d(287, 3, 215);
+
+    public static Vec3d ARENA_GRASS_START_POS = new Vec3d(266, 3, 181);
+    public static Vec3d ARENA_GRASS_END_POS = new Vec3d(285, 3, 211);
+
     public static KeyBinding SHEEP_SPAWN_BUTTON;
     public static KeyBinding WOLF_SPAWN_BUTTON;
     public static KeyBinding RESET_BUTTON;

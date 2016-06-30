@@ -77,6 +77,8 @@ public class EventHandler {
             PLAYER = event.player;
         }
 
+        WORLD.setAllowedSpawnTypes(false, false);
+
         List<EntitySheep> sheeps =  WORLD.getEntities(EntitySheep.class, new PassThrough<EntitySheep>());
 
         for(EntitySheep sheep: sheeps){
@@ -106,10 +108,6 @@ public class EventHandler {
         if(event.getEntity() instanceof EntitySheep){
             SHEEP_HANDLER.initAI((EntitySheep) event.getEntity());
         }
-
-        if (event.getEntity() instanceof EntityMob){
-            ((EntityLiving)event.getEntity()).setHealth(0);
-        }
     }
 
     @SubscribeEvent
@@ -126,6 +124,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void update(LivingEvent.LivingUpdateEvent event){
+        if(WORLD!=null)
         if(event.getEntity() instanceof EntityLiving) {
             if(!killAll) {
                 if(!(event.getEntity().getClass().getSimpleName().equals("EntitySheep"))
@@ -135,10 +134,20 @@ public class EventHandler {
                 }
             }
             else{
-                if(WORLD!=null){
-                    WORLD.removeEntity(event.getEntity());
-                }
+                event.getEntityLiving().setHealth(0);
+//                WORLD.removeEntity(event.getEntity());
             }
+
+            if(event.getEntity().posX < CONFIG.ARENA_START_POS.xCoord ||
+                    event.getEntity().posX > CONFIG.ARENA_END_POS.xCoord){
+                event.getEntityLiving().setHealth(0);
+            }
+
+            if(event.getEntity().posZ < CONFIG.ARENA_START_POS.zCoord
+                    || event.getEntity().posZ > CONFIG.ARENA_END_POS.zCoord){
+                event.getEntityLiving().setHealth(0);
+            }
+
         }
 
         if(STATS.getStat("EntitySheep")==0 && STATS.getStat("EntityWolf")==0){
@@ -220,26 +229,36 @@ public class EventHandler {
         }
 
         if(CONFIG.RESET_BUTTON.isPressed()){
-            PLAYER.cameraYaw = -90;
-            PLAYER.cameraPitch = 81;
+/*            PLAYER.cameraYaw = -90;
+            PLAYER.cameraPitch = 81;*/
 
             PLAYER.setPositionAndUpdate(CONFIG.HOME_POS.xCoord,
                     CONFIG.HOME_POS.yCoord,
                     CONFIG.HOME_POS.zCoord);
 
-            WORLD.setWorldTime(1000);
+            if(!WORLD.isRemote)
+                WORLD.setWorldTime(1000);
 
-//            killAll = true;
+            killAll = true;
+            WORLD.loadedEntityList.clear();
 
             for(int i = (int) CONFIG.WALL_START_POS.xCoord; i <= CONFIG.WALL_END_POS.xCoord; i++){
                 for(int j = (int) CONFIG.WALL_START_POS.yCoord; j <= CONFIG.WALL_END_POS.yCoord; j++){
-                    WORLD.setBlockState(new BlockPos(i, j, CONFIG.WALL_START_POS.zCoord), Blocks.GOLD_BLOCK.getDefaultState());
+                    WORLD.setBlockState(new BlockPos(i, j, CONFIG.WALL_START_POS.zCoord),
+                            Blocks.GOLD_BLOCK.getDefaultState());
                 }
             }
 
+            for(int i = (int) CONFIG.ARENA_GRASS_START_POS.xCoord; i <= CONFIG.ARENA_GRASS_END_POS.xCoord; i++){
+                for(int j = (int) CONFIG.ARENA_GRASS_START_POS.zCoord; j<= CONFIG.ARENA_GRASS_END_POS.zCoord; j++){
+                    WORLD.setBlockState(new BlockPos(i, CONFIG.ARENA_GRASS_END_POS.yCoord, j),
+                            Blocks.GRASS.getDefaultState());
+                }
+            }
 
         }
     }
+
 
 
 
