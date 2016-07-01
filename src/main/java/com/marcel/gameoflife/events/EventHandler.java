@@ -20,7 +20,6 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -92,23 +91,6 @@ public class EventHandler {
 
         Game.reset(WORLD, PLAYER);
         killAll = true;
-
-//        PLAYER.setPositionAndUpdate(CONFIG.HOME_POS.xCoord, CONFIG.HOME_POS.yCoord, CONFIG.HOME_POS.zCoord);
-    }
-
-    @SubscribeEvent
-    public void pickUp(PlayerEvent.ItemPickupEvent event){
-//        PLAYER.addChatComponentMessage(new TextComponentString(PLAYER.getDisplayNameString()+" picked up: "+event.pickedUp.getDisplayName().getFormattedText()));
-    }
-
-    @SubscribeEvent
-    public void breakBlock(BlockEvent.BreakEvent event){
-//        PLAYER.addChatComponentMessage(new TextComponentString(PLAYER.getDisplayNameString()+ " broke block at "+event.getPos().toString()));
-    }
-
-    @SubscribeEvent
-    public void placeBlock(BlockEvent.PlaceEvent event){
-//        PLAYER.addChatComponentMessage(new TextComponentString(PLAYER.getDisplayNameString()+" placed block at "+event.getPos()));
     }
 
     @SubscribeEvent
@@ -134,24 +116,17 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public void jump(LivingEvent.LivingJumpEvent event){
-//        System.out.println("JUMP");
-    }
-
-    @SubscribeEvent
     public void update(LivingEvent.LivingUpdateEvent event){
         if(WORLD!=null)
         if(event.getEntity() instanceof EntityLiving) {
             if(!killAll) {
                 if(!(event.getEntity().getClass().getSimpleName().equals("EntitySheep"))
                         && !(event.getEntity().getClass().getSimpleName().equals("EntityWolf"))) {
-//                    ((EntityLiving)event.getEntity()).setHealth(0);
                     WORLD.removeEntity(event.getEntity());
                 }
             }
             else{
                 event.getEntityLiving().setHealth(0);
-//                WORLD.removeEntity(event.getEntity());
             }
 
             if(event.getEntity().posX < CONFIG.ARENA_START_POS.xCoord ||
