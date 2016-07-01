@@ -1,5 +1,6 @@
 package com.marcel.gameoflife.ais;
 
+import com.marcel.gameoflife.config.ModConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -23,9 +24,9 @@ public class EntityAIRandomWalking extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         if(!this.walker.getNavigator().noPath()){
-            if(debug){
+           /* if(debug){
                 System.out.println("No execution!");
-            }
+            }*/
 
             return false;
         }
@@ -36,8 +37,8 @@ public class EntityAIRandomWalking extends EntityAIBase {
 
     @Override
     public void startExecuting(){
-        if(debug)
-            System.out.println("START EXECUTION");
+        /*if(debug)
+            System.out.println("START EXECUTION");*/
     }
 
     @Override
@@ -46,7 +47,7 @@ public class EntityAIRandomWalking extends EntityAIBase {
 
         if(player != null){
             if(this.walker.getDistanceToEntity(player) < 5.0){
-//                debug = true;
+                debug = true;
             }
             else{
                 debug = false;
@@ -61,17 +62,24 @@ public class EntityAIRandomWalking extends EntityAIBase {
 
     public void startWalking(){
         Vec3d pos = walker.getPositionVector();
-        int randx = walker.getRNG().nextInt() % 20;
-        int randz = walker.getRNG().nextInt() % 20;
 
-        int chose = walker.getRNG().nextInt() % 2;
+        int randx = walker.getRNG().nextInt((int) (ModConfig.ARENA_GRASS_END_POS.xCoord - ModConfig.ARENA_GRASS_START_POS.xCoord));
+        randx += ModConfig.ARENA_GRASS_START_POS.xCoord;
+
+        /*int randx = walker.getRNG().nextInt((int) (ModConfig.ARENA_GRASS_END_POS.xCoord - ModConfig.ARENA_GRASS_START_POS.xCoord + 1));
+        randx += (int)(ModConfig.ARENA_GRASS_START_POS.xCoord);*/
+
+        int randz = walker.getRNG().nextInt((int) (ModConfig.ARENA_GRASS_END_POS.zCoord -  ModConfig.ARENA_GRASS_START_POS.zCoord));
+        randz += ModConfig.ARENA_GRASS_START_POS.zCoord;
+
+        /*int chose = walker.getRNG().nextInt() % 2;
 
         if(chose == 0){
             randx *= (-1);
             randz *= (-1);
-        }
+        }*/
 
-        this.randomPos = new Vec3d(pos.xCoord+randx, pos.yCoord, pos.zCoord+randz);
+        this.randomPos = new Vec3d(randx, pos.yCoord, randz);
 
         boolean state = this.walker.getNavigator().tryMoveToXYZ(randomPos.xCoord, randomPos.yCoord, randomPos.zCoord,2.0);
 
