@@ -251,6 +251,10 @@ public class EventHandler {
             Game.reset(WORLD, PLAYER);
             killAll = true;
         }
+
+        if(CONFIG.START_BUTTON.isPressed()){
+            Game.start(WORLD, spawnQueue);
+        }
     }
 
 
