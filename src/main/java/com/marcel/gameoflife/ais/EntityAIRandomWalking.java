@@ -66,18 +66,8 @@ public class EntityAIRandomWalking extends EntityAIBase {
         int randx = walker.getRNG().nextInt((int) (ModConfig.ARENA_GRASS_END_POS.xCoord - ModConfig.ARENA_GRASS_START_POS.xCoord));
         randx += ModConfig.ARENA_GRASS_START_POS.xCoord;
 
-        /*int randx = walker.getRNG().nextInt((int) (ModConfig.ARENA_GRASS_END_POS.xCoord - ModConfig.ARENA_GRASS_START_POS.xCoord + 1));
-        randx += (int)(ModConfig.ARENA_GRASS_START_POS.xCoord);*/
-
         int randz = walker.getRNG().nextInt((int) (ModConfig.ARENA_GRASS_END_POS.zCoord -  ModConfig.ARENA_GRASS_START_POS.zCoord));
         randz += ModConfig.ARENA_GRASS_START_POS.zCoord;
-
-        /*int chose = walker.getRNG().nextInt() % 2;
-
-        if(chose == 0){
-            randx *= (-1);
-            randz *= (-1);
-        }*/
 
         this.randomPos = new Vec3d(randx, pos.yCoord, randz);
 

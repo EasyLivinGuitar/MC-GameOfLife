@@ -2,6 +2,7 @@ package com.marcel.gameoflife.events;
 
 import com.marcel.gameoflife.config.ModConfig;
 import com.marcel.gameoflife.handler.SheepHandler;
+import com.marcel.gameoflife.handler.WolfHandler;
 import com.marcel.gameoflife.hudelements.PopulationStats;
 import com.marcel.gameoflife.logic.Game;
 import com.marcel.gameoflife.misc.predicates.PassThrough;
@@ -42,6 +43,7 @@ public class EventHandler {
     private static EntityPlayer PLAYER;
 
     private SheepHandler SHEEP_HANDLER;
+    private WolfHandler WOLF_HANDLER;
 
     private static ModConfig CONFIG;
 
@@ -58,6 +60,7 @@ public class EventHandler {
     public EventHandler(){
         CONFIG = new ModConfig();
         SHEEP_HANDLER = new SheepHandler();
+        WOLF_HANDLER = new WolfHandler();
 
         spawnQueue = new ArrayList<Entity>();
         killAll = false;
@@ -113,12 +116,20 @@ public class EventHandler {
         if(event.getEntity() instanceof EntitySheep){
             SHEEP_HANDLER.initAI((EntitySheep) event.getEntity());
         }
+
+        if(event.getEntity() instanceof  EntityWolf){
+            WOLF_HANDLER.initAI((EntityWolf) event.getEntity());
+        }
     }
 
     @SubscribeEvent
     public void join(EntityJoinWorldEvent event){
         if(event.getEntity() instanceof EntitySheep){
             SHEEP_HANDLER.initAI((EntitySheep) event.getEntity());
+        }
+
+        if(event.getEntity() instanceof  EntityWolf){
+            WOLF_HANDLER.initAI((EntityWolf) event.getEntity());
         }
     }
 
