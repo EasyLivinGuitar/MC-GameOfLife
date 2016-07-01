@@ -13,6 +13,6 @@ public class WolfHandler {
 
         wolf.tasks.addTask(0, new EntityAILeaveSpawnArea(wolf));
 
-//        wolf.targetTasks.addTask(0, new EntityAISheepEating<EntitySheep>(wolf, EntitySheep.class, false));
+        wolf.setDropItemsWhenDead(false);
     }
 }

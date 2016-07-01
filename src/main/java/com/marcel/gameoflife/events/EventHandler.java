@@ -51,9 +51,6 @@ public class EventHandler {
 
     private List<Entity> spawnQueue;
 
-    private int sheepCounter = 0;
-    private int wolfCounter = 0;
-
     private boolean killAll;
 
     public EventHandler(){
