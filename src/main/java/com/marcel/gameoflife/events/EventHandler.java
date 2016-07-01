@@ -18,7 +18,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -114,7 +114,8 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public void die(LivingDeathEvent event){
+    public void drop(LivingDropsEvent event){
+        event.getDrops().clear();
     }
 
     @SubscribeEvent

@@ -27,7 +27,7 @@ public class ModConfig {
     public static Vec3d ARENA_GRASS_START_POS = new Vec3d(266, 3, 181);
     public static Vec3d ARENA_GRASS_END_POS = new Vec3d(285, 3, 211);
 
-    public static int INITIAL_POPULATION = 10;
+    public static int INITIAL_POPULATION = 20;
 
     public static KeyBinding SHEEP_SPAWN_BUTTON;
     public static KeyBinding WOLF_SPAWN_BUTTON;

@@ -48,6 +48,9 @@ public class Game {
                         Blocks.GRASS.getDefaultState());
             }
         }
+
+        world.setRainStrength(0);
+
     }
 
     public static void start(World world, List<Entity> spawnQueue){
