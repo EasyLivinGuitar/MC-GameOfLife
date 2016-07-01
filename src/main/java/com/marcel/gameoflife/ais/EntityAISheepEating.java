@@ -35,10 +35,12 @@ public class EntityAISheepEating<T extends EntityLivingBase> extends EntityAITar
     protected T targetEntity;
 
     private long lastEaten;
+    private long wolfStarvingPeriod;
 
-    public EntityAISheepEating(EntityCreature creature, Class<T> classTarget, boolean checkSight)
+    public EntityAISheepEating(EntityCreature creature, Class<T> classTarget, boolean checkSight, long wolfStarvingPeriod)
     {
         this(creature, classTarget, checkSight, false);
+        this.wolfStarvingPeriod = wolfStarvingPeriod;
     }
 
     public EntityAISheepEating(EntityCreature creature, Class<T> classTarget, boolean checkSight, boolean onlyNearby)
@@ -69,7 +71,7 @@ public class EntityAISheepEating<T extends EntityLivingBase> extends EntityAITar
      */
     public boolean shouldExecute()
     {
-        if(System.currentTimeMillis() - this.lastEaten > 8000){
+        if(System.currentTimeMillis() - this.lastEaten > this.wolfStarvingPeriod){
             this.taskOwner.setHealth(0);
         }
 

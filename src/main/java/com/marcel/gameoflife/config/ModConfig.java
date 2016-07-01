@@ -36,6 +36,11 @@ public class ModConfig {
 
     public static List<Class> DISPLAY_ENTITY_POPULATION;
 
+    public static long SHEEP_EATING_PERIOD = 1000;
+    public static long SHEEP_STARVING_PERIOD = 8000;
+
+    public static long WOLF_STARVING_PERIOD = 6000;
+
     public ModConfig(){
         SHEEP_SPAWN_BUTTON = new KeyBinding("key.spawn.sheep", Keyboard.KEY_ADD, "key.categories.misc");
         WOLF_SPAWN_BUTTON = new KeyBinding("key.spawn.wolf", Keyboard.KEY_SUBTRACT, "key.categories.misc");

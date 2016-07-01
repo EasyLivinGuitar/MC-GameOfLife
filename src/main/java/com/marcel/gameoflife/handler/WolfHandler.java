@@ -2,6 +2,7 @@ package com.marcel.gameoflife.handler;
 
 import com.marcel.gameoflife.ais.EntityAILeaveSpawnArea;
 import com.marcel.gameoflife.ais.EntityAISheepEating;
+import com.marcel.gameoflife.config.ModConfig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityWolf;
 
@@ -14,7 +15,7 @@ public class WolfHandler {
         wolf.targetTasks.taskEntries.clear();
 
         wolf.tasks.addTask(0, new EntityAILeaveSpawnArea(wolf));
-        wolf.targetTasks.addTask(1, new EntityAISheepEating<EntitySheep>(wolf,EntitySheep.class, false));
+        wolf.targetTasks.addTask(1, new EntityAISheepEating<EntitySheep>(wolf,EntitySheep.class, false, ModConfig.WOLF_STARVING_PERIOD));
 
         wolf.setDropItemsWhenDead(false);
     }

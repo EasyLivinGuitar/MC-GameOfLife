@@ -16,15 +16,17 @@ public class EntityAISimpleEatGrass extends EntityAIBase {
     private long eatTime;
 
     private long lastEaten;
+    private long sheepStarvingPeriod;
 
 
-    public EntityAISimpleEatGrass(final EntityLiving grassEater, long millis){
+    public EntityAISimpleEatGrass(final EntityLiving grassEater, long millis, long sheepStarvingPeriod){
         this.grassEater = grassEater;
         this.setMutexBits(8);
 
         this.startTime = System.currentTimeMillis();
         this.lastEaten = this.startTime;
         this.eatTime = millis;
+        this.sheepStarvingPeriod = sheepStarvingPeriod;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class EntityAISimpleEatGrass extends EntityAIBase {
             startExecuting();
         }
 
-        if(System.currentTimeMillis() - this.lastEaten > 8000){
+        if(System.currentTimeMillis() - this.lastEaten > this.sheepStarvingPeriod){
             this.grassEater.setHealth(0);
         }
     }
