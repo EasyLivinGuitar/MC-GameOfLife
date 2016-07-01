@@ -12,7 +12,7 @@ public class SheepHandler {
         sheep.tasks.taskEntries.clear();
         sheep.targetTasks.taskEntries.clear();
 
-        sheep.tasks.addTask(0, new EntityAISimpleEatGrass(sheep, 2000));
+        sheep.tasks.addTask(0, new EntityAISimpleEatGrass(sheep, 1000));
         sheep.tasks.addTask(1, new EntityAIRandomWalking(sheep));
 
         sheep.setDropItemsWhenDead(false);

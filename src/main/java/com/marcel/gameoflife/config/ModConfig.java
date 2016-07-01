@@ -37,8 +37,8 @@ public class ModConfig {
     public static List<Class> DISPLAY_ENTITY_POPULATION;
 
     public ModConfig(){
-        SHEEP_SPAWN_BUTTON = new KeyBinding("key.spawn.sheep", Keyboard.KEY_1, "key.categories.misc");
-        WOLF_SPAWN_BUTTON = new KeyBinding("key.spawn.wolf", Keyboard.KEY_2, "key.categories.misc");
+        SHEEP_SPAWN_BUTTON = new KeyBinding("key.spawn.sheep", Keyboard.KEY_ADD, "key.categories.misc");
+        WOLF_SPAWN_BUTTON = new KeyBinding("key.spawn.wolf", Keyboard.KEY_SUBTRACT, "key.categories.misc");
         RESET_BUTTON = new KeyBinding("key.reset.game", Keyboard.KEY_BACK, "key.categories.misc");
         START_BUTTON = new KeyBinding("key.start.game", Keyboard.KEY_RETURN, "key.categories.misc");
 

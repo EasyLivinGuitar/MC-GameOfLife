@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -110,6 +111,10 @@ public class EventHandler {
         if(event.getEntity() instanceof  EntityWolf){
             WOLF_HANDLER.initAI((EntityWolf) event.getEntity());
         }
+    }
+
+    @SubscribeEvent
+    public void die(LivingDeathEvent event){
     }
 
     @SubscribeEvent
