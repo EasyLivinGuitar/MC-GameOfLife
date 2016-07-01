@@ -3,16 +3,15 @@ package com.marcel.gameoflife.events;
 import com.marcel.gameoflife.config.ModConfig;
 import com.marcel.gameoflife.handler.SheepHandler;
 import com.marcel.gameoflife.hudelements.PopulationStats;
+import com.marcel.gameoflife.logic.Game;
 import com.marcel.gameoflife.misc.predicates.PassThrough;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -51,6 +50,9 @@ public class EventHandler {
 
     private List<Entity> spawnQueue;
 
+    private int sheepCounter = 0;
+    private int wolfCounter = 0;
+
     private boolean killAll;
 
     public EventHandler(){
@@ -85,7 +87,10 @@ public class EventHandler {
             SHEEP_HANDLER.initAI(sheep);
         }
 
-        PLAYER.setPositionAndUpdate(CONFIG.HOME_POS.xCoord, CONFIG.HOME_POS.yCoord, CONFIG.HOME_POS.zCoord);
+        Game.reset(WORLD, PLAYER);
+        killAll = true;
+
+//        PLAYER.setPositionAndUpdate(CONFIG.HOME_POS.xCoord, CONFIG.HOME_POS.yCoord, CONFIG.HOME_POS.zCoord);
     }
 
     @SubscribeEvent
@@ -150,7 +155,7 @@ public class EventHandler {
 
         }
 
-        if(STATS.getStat("EntitySheep")==0 && STATS.getStat("EntityWolf")==0){
+        if(STATS.getStat("EntitySheep") == 0 && STATS.getStat("EntityWolf") == 0){
             killAll = false;
         }
     }
@@ -168,18 +173,21 @@ public class EventHandler {
         if(WORLD != null) {
             for (Class entityType : CONFIG.DISPLAY_ENTITY_POPULATION) {
                 try{
-//                    currentStats.put(entityType.getSimpleName(), WORLD.getEntities(entityType, new PassThrough()).size());
-                    currentStats.put(entityType.getSimpleName(), WORLD.countEntities(entityType));
+                    if(!WORLD.isRemote){
+                        currentStats.put(entityType.getSimpleName(), Minecraft.getMinecraft().theWorld.countEntities(entityType));
+                    }
+
+
                 }
                 catch (Exception e){
                     System.out.println("ERROR: Unable to get stats.");
                 }
-
             }
 
             if(!spawnQueue.isEmpty()){
                 try{
-                    WORLD.spawnEntityInWorld(spawnQueue.get(0));
+                    if(!WORLD.isRemote)
+                        WORLD.spawnEntityInWorld(spawnQueue.get(0));
                 }
                 catch (Exception e){
                     System.out.println("ERROR: Unable to spawn.");
@@ -189,6 +197,17 @@ public class EventHandler {
                 spawnQueue.remove(0);
             }
         }
+    }
+
+    private int countEntities(Class type){
+        int counter = 0;
+        for(Entity entity: WORLD.loadedEntityList){
+            if(entity.getClass().getSimpleName().equals(type.getSimpleName())){
+                counter++;
+            }
+        }
+
+        return counter;
     }
 
     @SubscribeEvent
@@ -229,33 +248,8 @@ public class EventHandler {
         }
 
         if(CONFIG.RESET_BUTTON.isPressed()){
-/*            PLAYER.cameraYaw = -90;
-            PLAYER.cameraPitch = 81;*/
-
-            PLAYER.setPositionAndUpdate(CONFIG.HOME_POS.xCoord,
-                    CONFIG.HOME_POS.yCoord,
-                    CONFIG.HOME_POS.zCoord);
-
-            if(!WORLD.isRemote)
-                WORLD.setWorldTime(1000);
-
+            Game.reset(WORLD, PLAYER);
             killAll = true;
-            WORLD.loadedEntityList.clear();
-
-            for(int i = (int) CONFIG.WALL_START_POS.xCoord; i <= CONFIG.WALL_END_POS.xCoord; i++){
-                for(int j = (int) CONFIG.WALL_START_POS.yCoord; j <= CONFIG.WALL_END_POS.yCoord; j++){
-                    WORLD.setBlockState(new BlockPos(i, j, CONFIG.WALL_START_POS.zCoord),
-                            Blocks.GOLD_BLOCK.getDefaultState());
-                }
-            }
-
-            for(int i = (int) CONFIG.ARENA_GRASS_START_POS.xCoord; i <= CONFIG.ARENA_GRASS_END_POS.xCoord; i++){
-                for(int j = (int) CONFIG.ARENA_GRASS_START_POS.zCoord; j<= CONFIG.ARENA_GRASS_END_POS.zCoord; j++){
-                    WORLD.setBlockState(new BlockPos(i, CONFIG.ARENA_GRASS_END_POS.yCoord, j),
-                            Blocks.GRASS.getDefaultState());
-                }
-            }
-
         }
     }
 
