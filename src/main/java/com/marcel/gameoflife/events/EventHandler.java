@@ -4,6 +4,7 @@ import com.marcel.gameoflife.config.ModConfig;
 import com.marcel.gameoflife.handler.SheepHandler;
 import com.marcel.gameoflife.handler.WolfHandler;
 import com.marcel.gameoflife.hudelements.PopulationStats;
+import com.marcel.gameoflife.hudelements.RuntimeTimer;
 import com.marcel.gameoflife.logic.Game;
 import com.marcel.gameoflife.misc.predicates.PassThrough;
 import net.minecraft.client.Minecraft;
@@ -46,8 +47,11 @@ public class EventHandler {
     private WolfHandler WOLF_HANDLER;
 
     private static ModConfig CONFIG;
+    private static Game GAME;
 
     private PopulationStats STATS;
+    private RuntimeTimer TIMER;
+
     private Map<String, Integer> currentStats;
 
     private List<Entity> spawnQueue;
@@ -58,6 +62,8 @@ public class EventHandler {
         CONFIG = new ModConfig();
         SHEEP_HANDLER = new SheepHandler();
         WOLF_HANDLER = new WolfHandler();
+        GAME = new Game();
+        TIMER = new RuntimeTimer();
 
         spawnQueue = new ArrayList<Entity>();
         killAll = false;
@@ -87,7 +93,7 @@ public class EventHandler {
             SHEEP_HANDLER.initAI(sheep);
         }
 
-        Game.reset(WORLD, PLAYER);
+        GAME.reset(WORLD, PLAYER);
         killAll = true;
     }
 
@@ -154,6 +160,10 @@ public class EventHandler {
     public void render(RenderGameOverlayEvent.Post event){
         if(currentStats != null){
             STATS.drawStats(currentStats);
+        }
+
+        if(GAME.isRunning()){
+            TIMER.draw();
         }
     }
 
@@ -237,12 +247,13 @@ public class EventHandler {
         }
 
         if(CONFIG.RESET_BUTTON.isPressed()){
-            Game.reset(WORLD, PLAYER);
+            GAME.reset(WORLD, PLAYER);
             killAll = true;
         }
 
         if(CONFIG.START_BUTTON.isPressed()){
-            Game.start(WORLD, spawnQueue);
+            GAME.start(WORLD, spawnQueue);
+            TIMER.start();
         }
     }
 

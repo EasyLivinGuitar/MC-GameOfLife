@@ -18,22 +18,33 @@ import java.util.List;
  * Created by kipu5728 on 7/1/16.
  */
 public class Game {
-    public static void reset(World world, EntityPlayer player){
+    private boolean isRunning;
+
+    public Game(){
+        this.isRunning = false;
+    }
+
+    public void reset(World world, EntityPlayer player){
         /*player.cameraYaw = -90;
         player.cameraPitch = 81;*/
+
+        this.isRunning = false;
 
         player.setPositionAndUpdate(ModConfig.HOME_POS.xCoord,
                 ModConfig.HOME_POS.yCoord,
                 ModConfig.HOME_POS.zCoord);
 
-        if(!world.isRemote)
+        if(!world.isRemote){
             world.setWorldTime(1000);
+            world.setRainStrength(0);
+
+        }
 
         for(EntityLiving entity: world.getEntities(EntityLiving.class, new PassThrough<Entity>())){
             entity.setHealth(0);
         }
 
-        world.unloadEntities(world.<Entity>getEntities(EntityLiving.class, new PassThrough<Entity>()));
+//        world.unloadEntities(world.<Entity>getEntities(EntityLiving.class, new PassThrough<Entity>()));
 
         for(int i = (int) ModConfig.WALL_START_POS.xCoord; i <= ModConfig.WALL_END_POS.xCoord; i++){
             for(int j = (int) ModConfig.WALL_START_POS.yCoord; j <= ModConfig.WALL_END_POS.yCoord; j++){
@@ -49,11 +60,11 @@ public class Game {
             }
         }
 
-        world.setRainStrength(0);
-
     }
 
-    public static void start(World world, List<Entity> spawnQueue){
+    public void start(World world, List<Entity> spawnQueue){
+        this.isRunning = true;
+
         for(int i = (int) ModConfig.WALL_START_POS.xCoord; i <= ModConfig.WALL_END_POS.xCoord; i++) {
             for (int j = (int) ModConfig.WALL_START_POS.yCoord; j <= ModConfig.WALL_END_POS.yCoord; j++) {
                 world.setBlockToAir(new BlockPos(i, j, ModConfig.WALL_START_POS.zCoord));
@@ -82,6 +93,10 @@ public class Game {
             spawnQueue.add(sheep);
             spawnQueue.add(wolf);
         }
+    }
+
+    public boolean isRunning(){
+        return this.isRunning;
     }
 
 }
