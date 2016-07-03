@@ -1,6 +1,7 @@
 package com.marcel.gameoflife.logic;
 
 import com.marcel.gameoflife.config.ModConfig;
+import com.marcel.gameoflife.gui.hudelements.PopulationStats;
 import com.marcel.gameoflife.misc.predicates.PassThrough;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -24,7 +25,7 @@ public class Game {
         this.isRunning = false;
     }
 
-    public void reset(World world, EntityPlayer player){
+    public void reset(World world, EntityPlayer player, PopulationStats stats){
         /*player.cameraYaw = -90;
         player.cameraPitch = 81;*/
 
@@ -59,6 +60,8 @@ public class Game {
                         Blocks.GRASS.getDefaultState());
             }
         }
+
+        stats.reset();
 
     }
 
@@ -95,8 +98,16 @@ public class Game {
         }
     }
 
+    public void end(){
+        this.isRunning = false;
+    }
+
     public boolean isRunning(){
         return this.isRunning;
+    }
+
+    public boolean isInitDone(PopulationStats stats){
+        return stats.getMaxStats("EntitySheep") == ModConfig.INITIAL_POPULATION;
     }
 
 }

@@ -1,10 +1,11 @@
 package com.marcel.gameoflife.events;
 
+import com.marcel.gameoflife.GameOfLifeMod;
 import com.marcel.gameoflife.config.ModConfig;
+import com.marcel.gameoflife.gui.hudelements.PopulationStats;
+import com.marcel.gameoflife.gui.hudelements.RuntimeTimer;
 import com.marcel.gameoflife.handler.SheepHandler;
 import com.marcel.gameoflife.handler.WolfHandler;
-import com.marcel.gameoflife.hudelements.PopulationStats;
-import com.marcel.gameoflife.hudelements.RuntimeTimer;
 import com.marcel.gameoflife.logic.Game;
 import com.marcel.gameoflife.misc.predicates.PassThrough;
 import net.minecraft.client.Minecraft;
@@ -22,6 +23,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -49,8 +51,8 @@ public class EventHandler {
     private static ModConfig CONFIG;
     private static Game GAME;
 
-    private PopulationStats STATS;
-    private RuntimeTimer TIMER;
+    public static PopulationStats STATS;
+    public static RuntimeTimer TIMER;
 
     private Map<String, Integer> currentStats;
 
@@ -93,7 +95,7 @@ public class EventHandler {
             SHEEP_HANDLER.initAI(sheep);
         }
 
-        GAME.reset(WORLD, PLAYER);
+        GAME.reset(WORLD, PLAYER, STATS);
         killAll = true;
     }
 
@@ -153,6 +155,8 @@ public class EventHandler {
         if(STATS.getStat("EntitySheep") == 0 && STATS.getStat("EntityWolf") == 0){
             killAll = false;
         }
+
+
     }
 
     @SideOnly(Side.CLIENT)
@@ -195,18 +199,16 @@ public class EventHandler {
 
                 spawnQueue.remove(0);
             }
-        }
-    }
 
-    private int countEntities(Class type){
-        int counter = 0;
-        for(Entity entity: WORLD.loadedEntityList){
-            if(entity.getClass().getSimpleName().equals(type.getSimpleName())){
-                counter++;
+            if(GAME.isRunning() && GAME.isInitDone(STATS) &&
+                    (STATS.getStat("EntitySheep") == 0 || STATS.getStat("EntityWolf") == 0)){
+
+                GAME.end();
+                TIMER.stop();
+                FMLClientHandler.instance().getClient().thePlayer.openGui(GameOfLifeMod.instance, 666 ,WORLD, 0, 0, 0);
+                GAME.reset(WORLD, PLAYER, STATS);
             }
         }
-
-        return counter;
     }
 
     @SubscribeEvent
@@ -247,7 +249,8 @@ public class EventHandler {
         }
 
         if(CONFIG.RESET_BUTTON.isPressed()){
-            GAME.reset(WORLD, PLAYER);
+            GAME.reset(WORLD, PLAYER, STATS);
+            TIMER.stop();
             killAll = true;
         }
 
