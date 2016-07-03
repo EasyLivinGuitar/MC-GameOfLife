@@ -15,9 +15,6 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         System.out.println("GET SERVER GUI");
-        /*if(ID == GAME_OVER_GUI_ID){
-            return new GameOverGui();
-        }*/
 
         return null;
     }
@@ -25,9 +22,19 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         System.out.println("GET CLIENT GUI");
-        if(ID == GAME_OVER_GUI_ID){
-            return new GameOverGui();
+
+        try{
+            if(ID == GAME_OVER_GUI_ID){
+                return new GameOverGui();
+            }
+            else{
+                System.out.println("ERROR: GUI_ID not found");
+            }
         }
+        catch (Exception e){
+            System.out.println("ERROR: Cant load gui");
+        }
+
 
         return null;
     }

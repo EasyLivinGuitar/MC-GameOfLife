@@ -59,6 +59,7 @@ public class EventHandler {
     private List<Entity> spawnQueue;
 
     private boolean killAll;
+    private boolean gameEnded;
 
     public EventHandler(){
         CONFIG = new ModConfig();
@@ -169,6 +170,15 @@ public class EventHandler {
         if(GAME.isRunning()){
             TIMER.draw();
         }
+
+        if(GAME.isRunning() && GAME.isInitDone(STATS) &&
+                (STATS.getStat("EntitySheep") == 0 || STATS.getStat("EntityWolf") == 0)){
+
+            GAME.end();
+            TIMER.stop();
+            FMLClientHandler.instance().getClient().thePlayer.openGui(GameOfLifeMod.instance, 666 ,WORLD, 0, 0, 0);
+            GAME.reset(WORLD, PLAYER, STATS);
+        }
     }
 
     @SubscribeEvent
@@ -200,14 +210,7 @@ public class EventHandler {
                 spawnQueue.remove(0);
             }
 
-            if(GAME.isRunning() && GAME.isInitDone(STATS) &&
-                    (STATS.getStat("EntitySheep") == 0 || STATS.getStat("EntityWolf") == 0)){
 
-                GAME.end();
-                TIMER.stop();
-                FMLClientHandler.instance().getClient().thePlayer.openGui(GameOfLifeMod.instance, 666 ,WORLD, 0, 0, 0);
-                GAME.reset(WORLD, PLAYER, STATS);
-            }
         }
     }
 
