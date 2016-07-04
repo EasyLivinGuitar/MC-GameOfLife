@@ -103,7 +103,7 @@ public class EventHandler {
         GAME.reset(WORLD, PLAYER, STATS);
         killAll = true;
 
-        PLAYER.setCustomNameTag("Player"+String.valueOf(PLAYER.getRNG().nextInt(1000)));
+        PLAYER.setCustomNameTag("Player"+String.format("%03d",PLAYER.getRNG().nextInt(1000)));
     }
 
     @SubscribeEvent

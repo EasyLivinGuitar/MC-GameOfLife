@@ -54,13 +54,18 @@ public class ScoreboardGui extends GuiScreen implements GuiYesNoCallback {
         int height = -40;
         int counter = 1;
         for(Map.Entry<String, Long> entry: this.scores.entrySet()){
-            this.drawString(this.fontRenderer, String.format("%2d. %-20s%-10s",counter, entry.getKey(),format.format(entry.getValue())),
-                    this.resolution.getScaledWidth()/2 - 50,
+
+            this.drawString(this.fontRenderer, String.format("%02d. %-10s%-25s",counter, format.format(entry.getValue()),entry.getKey()),
+                    this.resolution.getScaledWidth()/2 - 60,
                     this.resolution.getScaledHeight()/2 + height,
                     0xFFFFFF);
 
             counter++;
             height+=10;
+
+            if(counter % 11 == 0){
+                break;
+            }
         }
 
 

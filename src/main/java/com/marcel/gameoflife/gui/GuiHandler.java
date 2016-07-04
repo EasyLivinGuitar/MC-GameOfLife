@@ -26,11 +26,9 @@ public class GuiHandler implements IGuiHandler {
 
         try{
             if(ID == GAME_OVER_GUI_ID){
-                System.out.println("GAME OVER GUI");
                 return new GameOverGui();
             }
             else if(ID == SCOREBOARD_GUI_ID){
-                System.out.println("SCOREBOARD GUI");
                 return new ScoreboardGui();
             }
             else{

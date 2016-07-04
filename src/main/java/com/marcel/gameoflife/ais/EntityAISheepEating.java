@@ -71,7 +71,7 @@ public class EntityAISheepEating<T extends EntityLivingBase> extends EntityAITar
      */
     public boolean shouldExecute()
     {
-        if(System.currentTimeMillis() - this.lastEaten > this.wolfStarvingPeriod){
+        if(System.currentTimeMillis() - this.lastEaten >= this.wolfStarvingPeriod){
             this.taskOwner.setHealth(0);
         }
 
@@ -134,7 +134,7 @@ public class EntityAISheepEating<T extends EntityLivingBase> extends EntityAITar
     public void startExecuting()
     {
         this.taskOwner.setAttackTarget(this.targetEntity);
-        this.lastEaten = System.currentTimeMillis();
+//        this.lastEaten = System.currentTimeMillis();
         super.startExecuting();
     }
 
@@ -143,6 +143,14 @@ public class EntityAISheepEating<T extends EntityLivingBase> extends EntityAITar
         if(targetEntity.getHealth() <= 0){
             this.lastEaten = System.currentTimeMillis();
         }*/
+
+        if(targetEntity != null){
+            if(targetEntity.getAttackingEntity() == this.taskOwner){
+//                System.out.println("ATTACK");
+                this.lastEaten = System.currentTimeMillis();
+            }
+        }
+
     }
 
     public static class Sorter implements Comparator<Entity>
