@@ -22,6 +22,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -195,6 +196,15 @@ public class EventHandler {
         }
 
 
+    }
+
+    @SubscribeEvent
+    public void hurt(LivingHurtEvent event){
+        if (event.getEntity() instanceof EntitySheep){
+            if(event.getSource().getEntity() instanceof EntityWolf){
+                ((EntityWolf) event.getSource().getEntity()).setCustomNameTag("nomz");
+            }
+        }
     }
 
     @SubscribeEvent

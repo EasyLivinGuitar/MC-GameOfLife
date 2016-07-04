@@ -145,10 +145,20 @@ public class EntityAISheepEating<T extends EntityLivingBase> extends EntityAITar
         }*/
 
         if(targetEntity != null){
-            if(targetEntity.getAttackingEntity() == this.taskOwner){
+            if(this.taskOwner.getCustomNameTag().equals("nomz")){
+                System.out.println("NOMZ");
+                this.lastEaten = System.currentTimeMillis();
+                this.taskOwner.setCustomNameTag("");
+            }
+
+            /*if(targetEntity.getAttackingEntity() == this.taskOwner){
 //                System.out.println("ATTACK");
                 this.lastEaten = System.currentTimeMillis();
-            }
+            }*/
+        }
+
+        if(System.currentTimeMillis() - this.lastEaten >= this.wolfStarvingPeriod){
+            this.taskOwner.setHealth(0);
         }
 
     }
