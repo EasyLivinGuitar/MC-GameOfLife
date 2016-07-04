@@ -50,4 +50,6 @@ public class RuntimeTimer {
         return format.format(this.currentTime-this.startTime);
     }
 
+    public long getCurrentTime(){ return this.currentTime-this.startTime; }
+
 }

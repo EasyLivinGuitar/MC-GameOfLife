@@ -22,7 +22,6 @@ public class GameOfLifeMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
-        System.out.println(instance.MODID);
         MinecraftForge.EVENT_BUS.register(new EventHandler());
         NetworkRegistry.INSTANCE.registerGuiHandler(GameOfLifeMod.instance, new GuiHandler());
     }

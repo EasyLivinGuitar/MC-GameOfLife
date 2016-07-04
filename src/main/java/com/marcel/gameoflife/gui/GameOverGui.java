@@ -7,6 +7,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.gui.ScaledResolution;
 
+import java.io.IOException;
+
 /**
  * Created by kipu5728 on 7/3/16.
  */
@@ -27,6 +29,8 @@ public class GameOverGui extends GuiScreen implements GuiYesNoCallback {
         this.fontRenderer = this.mc.fontRendererObj;
         this.resolution = new ScaledResolution(this.mc);
 
+        EventHandler.GUI_OPENED = true;
+
 //        this.setWorldAndResolution(Minecraft.getMinecraft(),resolution.getScaledWidth(), resolution.getScaledHeight());
     }
 
@@ -39,20 +43,20 @@ public class GameOverGui extends GuiScreen implements GuiYesNoCallback {
         this.drawString(fontRenderer,
                 DIE_MESSAGE,
                 resolution.getScaledWidth()/2 -fontRenderer.getStringWidth(DIE_MESSAGE)/2,
-                resolution.getScaledHeight()/2 - 20,
+                resolution.getScaledHeight()/2 - 50,
                 0xe60000);
 
         /**Description**/
         this.drawString(fontRenderer,
                 "Survived time:",
                 resolution.getScaledWidth()/2 - fontRenderer.getStringWidth("Survived time:")/2,
-                resolution.getScaledHeight()/2 + 10,
+                resolution.getScaledHeight()/2 - 10,
                 0xFFFFFF);
 
         /**Survived time**/
         this.drawString(fontRenderer, EventHandler.TIMER.getCurrentTimeString(),
                 resolution.getScaledWidth()/2 - fontRenderer.getStringWidth(EventHandler.TIMER.getCurrentTimeString())/2,
-                resolution.getScaledHeight()/2 + 20, 0xFFFFFF);
+                resolution.getScaledHeight()/2, 0xFFFFFF);
 
         /*super.drawScreen(mousex, mousey, partialTicks);*/
     }
@@ -60,6 +64,19 @@ public class GameOverGui extends GuiScreen implements GuiYesNoCallback {
     @Override
     public boolean doesGuiPauseGame(){
         return true;
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keycode){
+        try {
+            super.keyTyped(typedChar, keycode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(keycode == 1){
+            EventHandler.GUI_OPENED = false;
+        }
     }
 
 }

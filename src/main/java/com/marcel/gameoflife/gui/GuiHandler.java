@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
  */
 public class GuiHandler implements IGuiHandler {
     private static final int GAME_OVER_GUI_ID = 666;
+    private static final int SCOREBOARD_GUI_ID = 555;
 
     public GuiHandler(){}
 
@@ -25,7 +26,12 @@ public class GuiHandler implements IGuiHandler {
 
         try{
             if(ID == GAME_OVER_GUI_ID){
+                System.out.println("GAME OVER GUI");
                 return new GameOverGui();
+            }
+            else if(ID == SCOREBOARD_GUI_ID){
+                System.out.println("SCOREBOARD GUI");
+                return new ScoreboardGui();
             }
             else{
                 System.out.println("ERROR: GUI_ID not found");

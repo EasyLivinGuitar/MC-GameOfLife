@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class EventHandler {
     private static World WORLD;
-    private static EntityPlayer PLAYER;
+    public static EntityPlayer PLAYER;
 
     private SheepHandler SHEEP_HANDLER;
     private WolfHandler WOLF_HANDLER;
@@ -57,9 +57,11 @@ public class EventHandler {
     private Map<String, Integer> currentStats;
 
     private List<Entity> spawnQueue;
+    private List<Integer> renderQueue;
 
     private boolean killAll;
-    private boolean gameEnded;
+    public static boolean GUI_OPENED;
+
 
     public EventHandler(){
         CONFIG = new ModConfig();
@@ -69,7 +71,9 @@ public class EventHandler {
         TIMER = new RuntimeTimer();
 
         spawnQueue = new ArrayList<Entity>();
+        renderQueue = new ArrayList<Integer>();
         killAll = false;
+        GUI_OPENED = false;
     }
 
     @SubscribeEvent
@@ -98,6 +102,8 @@ public class EventHandler {
 
         GAME.reset(WORLD, PLAYER, STATS);
         killAll = true;
+
+        PLAYER.setCustomNameTag("Player"+String.valueOf(PLAYER.getRNG().nextInt(1000)));
     }
 
     @SubscribeEvent
@@ -157,6 +163,18 @@ public class EventHandler {
             killAll = false;
         }
 
+        if(GAME.isRunning() && GAME.isInitDone(STATS) &&
+                (STATS.getStat("EntitySheep") == 0 || STATS.getStat("EntityWolf") == 0)){
+
+            GAME.end();
+            TIMER.stop();
+            /*FMLClientHandler.instance().getClient().thePlayer.openGui(GameOfLifeMod.instance, 666, WORLD, 0, 0, 0);
+            FMLClientHandler.instance().getClient().thePlayer.openGui(GameOfLifeMod.instance, 555, WORLD, 0, 0, 0);*/
+            renderQueue.add(666);
+            renderQueue.add(555);
+            GAME.reset(WORLD, PLAYER, STATS);
+        }
+
 
     }
 
@@ -171,14 +189,12 @@ public class EventHandler {
             TIMER.draw();
         }
 
-        if(GAME.isRunning() && GAME.isInitDone(STATS) &&
-                (STATS.getStat("EntitySheep") == 0 || STATS.getStat("EntityWolf") == 0)){
-
-            GAME.end();
-            TIMER.stop();
-            FMLClientHandler.instance().getClient().thePlayer.openGui(GameOfLifeMod.instance, 666 ,WORLD, 0, 0, 0);
-            GAME.reset(WORLD, PLAYER, STATS);
+        if(!renderQueue.isEmpty() && !GUI_OPENED){
+            FMLClientHandler.instance().getClient().thePlayer.openGui(GameOfLifeMod.instance, renderQueue.get(0), WORLD, 0, 0, 0);
+            renderQueue.remove(0);
         }
+
+
     }
 
     @SubscribeEvent
