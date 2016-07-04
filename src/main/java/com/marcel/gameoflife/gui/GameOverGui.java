@@ -16,7 +16,7 @@ public class GameOverGui extends GuiScreen implements GuiYesNoCallback {
     private ScaledResolution resolution;
     private FontRenderer fontRenderer;
 
-    private String DIE_MESSAGE = "You died!";
+    private String DIE_MESSAGE = "GAME OVER";
 
     public GameOverGui(){
         System.out.println("CONSTRUCTOR");
@@ -43,7 +43,7 @@ public class GameOverGui extends GuiScreen implements GuiYesNoCallback {
         this.drawString(fontRenderer,
                 DIE_MESSAGE,
                 resolution.getScaledWidth()/2 -fontRenderer.getStringWidth(DIE_MESSAGE)/2,
-                resolution.getScaledHeight()/2 - 50,
+                resolution.getScaledHeight()/2 - 60,
                 0xe60000);
 
         /**Description**/

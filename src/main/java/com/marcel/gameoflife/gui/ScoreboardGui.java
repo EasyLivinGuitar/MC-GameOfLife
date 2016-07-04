@@ -46,16 +46,16 @@ public class ScoreboardGui extends GuiScreen implements GuiYesNoCallback {
     public void drawScreen(int x, int y, float ticks){
         this.drawDefaultBackground();
 
-        this.drawString(this.fontRenderer, "Highscores:",
-                this.resolution.getScaledWidth()/2 - this.fontRenderer.getStringWidth("Highscores:")/2,
-                this.resolution.getScaledHeight()/2 - 50,
-                0xe60000);
+        this.drawString(this.fontRenderer, "HIGHSCORES",
+                this.resolution.getScaledWidth()/2 - this.fontRenderer.getStringWidth("HIGHSCORES")/2,
+                this.resolution.getScaledHeight()/2 - 60,
+                0xffff4d);
 
         int height = -40;
         int counter = 1;
         for(Map.Entry<String, Long> entry: this.scores.entrySet()){
 
-            this.drawString(this.fontRenderer, String.format("%02d. %-10s%-25s",counter, format.format(entry.getValue()),entry.getKey()),
+            this.drawString(this.fontRenderer, String.format("%02d.     %-10s%-25s",counter, format.format(entry.getValue()),entry.getKey()),
                     this.resolution.getScaledWidth()/2 - 60,
                     this.resolution.getScaledHeight()/2 + height,
                     0xFFFFFF);

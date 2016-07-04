@@ -205,8 +205,6 @@ public class EventHandler {
                     if(!WORLD.isRemote){
                         currentStats.put(entityType.getSimpleName(), Minecraft.getMinecraft().theWorld.countEntities(entityType));
                     }
-
-
                 }
                 catch (Exception e){
                     System.out.println("ERROR: Unable to get stats.");
@@ -274,6 +272,7 @@ public class EventHandler {
         }
 
         if(CONFIG.START_BUTTON.isPressed()){
+            renderQueue.add(111);
             GAME.start(WORLD, spawnQueue);
             TIMER.start();
         }

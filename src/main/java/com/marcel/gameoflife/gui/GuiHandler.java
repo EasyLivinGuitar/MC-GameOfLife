@@ -1,5 +1,6 @@
 package com.marcel.gameoflife.gui;
 
+import com.marcel.gameoflife.gui.hudelements.InsertNameGui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 public class GuiHandler implements IGuiHandler {
     private static final int GAME_OVER_GUI_ID = 666;
     private static final int SCOREBOARD_GUI_ID = 555;
+    private static final int INSERT_NAME_GUI_ID = 111;
 
     public GuiHandler(){}
 
@@ -30,6 +32,9 @@ public class GuiHandler implements IGuiHandler {
             }
             else if(ID == SCOREBOARD_GUI_ID){
                 return new ScoreboardGui();
+            }
+            else if(ID == INSERT_NAME_GUI_ID){
+                return new InsertNameGui();
             }
             else{
                 System.out.println("ERROR: GUI_ID not found");
