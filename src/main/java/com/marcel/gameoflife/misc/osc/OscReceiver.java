@@ -25,12 +25,16 @@ public class OscReceiver {
         OSCListener listener = new OSCListener() {
             @Override
             public void acceptMessage(Date date, OSCMessage oscMessage) {
-                System.out.println(oscMessage);
+                System.out.println(oscMessage.getArguments());
             }
         };
 
         this.receiver.addListener("/minecraft",listener);
         this.receiver.startListening();
+
+        while (this.receiver.isListening()){
+
+        }
     }
 
     public static void main(String argv[]){
