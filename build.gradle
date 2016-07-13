@@ -37,7 +37,14 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
+configurations{
+    embed
+    compile.extendsFrom(embed)
+}
+
 dependencies {
+    embed files("./libs/javaosc-core-0.3.jar")
+    compile files("./libs/javaosc-core-0.3.jar")
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
@@ -79,4 +86,6 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+
+    from configurations.embed.collect {it.isDirectory() ? it : zipTree(it)}
 }

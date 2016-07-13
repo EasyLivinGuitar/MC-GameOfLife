@@ -7,6 +7,7 @@ import com.marcel.gameoflife.gui.hudelements.RuntimeTimer;
 import com.marcel.gameoflife.handler.SheepHandler;
 import com.marcel.gameoflife.handler.WolfHandler;
 import com.marcel.gameoflife.logic.Game;
+import com.marcel.gameoflife.misc.osc.OscReceiver;
 import com.marcel.gameoflife.misc.predicates.PassThrough;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 /**
@@ -43,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class EventHandler {
-    private static World WORLD;
+    public static World WORLD;
     public static EntityPlayer PLAYER;
 
     private SheepHandler SHEEP_HANDLER;
@@ -57,8 +59,11 @@ public class EventHandler {
 
     private Map<String, Integer> currentStats;
 
-    private List<Entity> spawnQueue;
-    private List<Integer> renderQueue;
+    public static ConcurrentLinkedQueue<Entity> spawnQueue;
+    public static ConcurrentLinkedQueue<Integer> renderQueue;
+    public static ConcurrentLinkedQueue<String> gameCommandQueue;
+
+    private static OscReceiver oscReceiver;
 
     private boolean killAll;
     public static boolean GUI_OPENED;
@@ -71,8 +76,11 @@ public class EventHandler {
         GAME = new Game();
         TIMER = new RuntimeTimer();
 
-        spawnQueue = new ArrayList<Entity>();
-        renderQueue = new ArrayList<Integer>();
+        spawnQueue = new ConcurrentLinkedQueue<Entity>();
+        renderQueue = new ConcurrentLinkedQueue<Integer>();
+        gameCommandQueue = new ConcurrentLinkedQueue<String>();
+        oscReceiver = new OscReceiver(6666);
+
         killAll = false;
         GUI_OPENED = false;
     }
@@ -105,6 +113,7 @@ public class EventHandler {
         killAll = true;
 
         PLAYER.setCustomNameTag("Player"+String.format("%03d",PLAYER.getRNG().nextInt(1000)));
+
     }
 
     @SubscribeEvent
@@ -175,8 +184,6 @@ public class EventHandler {
             renderQueue.add(555);
             GAME.reset(WORLD, PLAYER, STATS);
         }
-
-
     }
 
     @SideOnly(Side.CLIENT)
@@ -191,8 +198,8 @@ public class EventHandler {
         }
 
         if(!renderQueue.isEmpty() && !GUI_OPENED){
-            FMLClientHandler.instance().getClient().thePlayer.openGui(GameOfLifeMod.instance, renderQueue.get(0), WORLD, 0, 0, 0);
-            renderQueue.remove(0);
+            GUI_OPENED = true;
+            FMLClientHandler.instance().getClient().thePlayer.openGui(GameOfLifeMod.instance, renderQueue.poll(), WORLD, 0, 0, 0);
         }
 
 
@@ -224,14 +231,27 @@ public class EventHandler {
             if(!spawnQueue.isEmpty()){
                 try{
                     if(!WORLD.isRemote)
-                        WORLD.spawnEntityInWorld(spawnQueue.get(0));
+                        WORLD.spawnEntityInWorld(spawnQueue.poll());
                 }
                 catch (Exception e){
                     System.out.println("ERROR: Unable to spawn.");
                 }
+            }
 
+            if(!gameCommandQueue.isEmpty()){
+                if(gameCommandQueue.peek().equals("start")){
+                    if(!GUI_OPENED){
+                        GAME.start(WORLD,spawnQueue);
+                        TIMER.start();
+                        gameCommandQueue.poll();
+                    }
+                }
+                else if(gameCommandQueue.peek().equals("reset")){
+                    GAME.reset(WORLD, PLAYER, STATS);
+                    TIMER.stop();
+                    gameCommandQueue.poll();
+                }
 
-                spawnQueue.remove(0);
             }
 
 
@@ -276,15 +296,22 @@ public class EventHandler {
         }
 
         if(CONFIG.RESET_BUTTON.isPressed()){
-            GAME.reset(WORLD, PLAYER, STATS);
-            TIMER.stop();
+            gameCommandQueue.add("reset");
+
+            /*GAME.reset(WORLD, PLAYER, STATS);
+            TIMER.stop();*/
             killAll = true;
         }
 
         if(CONFIG.START_BUTTON.isPressed()){
-            renderQueue.add(111);
-            GAME.start(WORLD, spawnQueue);
-            TIMER.start();
+            if(!GAME.isRunning()){
+                renderQueue.add(111);
+                gameCommandQueue.add("start");
+
+                /*GAME.start(WORLD, spawnQueue);
+                TIMER.start();*/
+            }
+
         }
     }
 

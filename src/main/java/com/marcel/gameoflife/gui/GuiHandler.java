@@ -1,6 +1,5 @@
 package com.marcel.gameoflife.gui;
 
-import com.marcel.gameoflife.gui.hudelements.InsertNameGui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;

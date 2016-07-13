@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by kipu5728 on 7/1/16.
@@ -65,7 +66,7 @@ public class Game {
 
     }
 
-    public void start(World world, List<Entity> spawnQueue){
+    public void start(World world, ConcurrentLinkedQueue<Entity> spawnQueue){
         this.isRunning = true;
 
         for(int i = (int) ModConfig.WALL_START_POS.xCoord; i <= ModConfig.WALL_END_POS.xCoord; i++) {
@@ -107,7 +108,7 @@ public class Game {
     }
 
     public boolean isInitDone(PopulationStats stats){
-        return stats.getMaxStats("EntitySheep") == ModConfig.INITIAL_POPULATION;
+        return stats.getMaxStats("EntitySheep") >= ModConfig.INITIAL_POPULATION;
     }
 
 }

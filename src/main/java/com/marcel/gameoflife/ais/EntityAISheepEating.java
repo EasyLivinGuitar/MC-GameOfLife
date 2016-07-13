@@ -75,11 +75,11 @@ public class EntityAISheepEating<T extends EntityLivingBase> extends EntityAITar
             this.taskOwner.setHealth(0);
         }
 
-        if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0)
+        /*if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0)
         {
             return false;
-        }
-        else if (this.targetClass != EntityPlayer.class && this.targetClass != EntityPlayerMP.class)
+        }*/
+        /*else */if (this.targetClass != EntityPlayer.class && this.targetClass != EntityPlayerMP.class)
         {
             List<T> list = this.taskOwner.worldObj.<T>getEntitiesWithinAABB(this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
 
@@ -146,7 +146,6 @@ public class EntityAISheepEating<T extends EntityLivingBase> extends EntityAITar
 
         if(targetEntity != null){
             if(this.taskOwner.getCustomNameTag().equals("nomz")){
-                System.out.println("NOMZ");
                 this.lastEaten = System.currentTimeMillis();
                 this.taskOwner.setCustomNameTag("");
             }

@@ -1,4 +1,4 @@
-package com.marcel.gameoflife.gui.hudelements;
+package com.marcel.gameoflife.gui;
 
 import com.marcel.gameoflife.events.EventHandler;
 import net.minecraft.client.Minecraft;
@@ -33,12 +33,17 @@ public class InsertNameGui extends GuiScreen {
         this.textBox.setText("StupidPlayerName");
         this.textBox.setFocused(true);
 
-//        EventHandler.GUI_OPENED = true;
+        EventHandler.GUI_OPENED = true;
+
     }
 
     @Override
     public void keyTyped(char key, int keycode){
         try {
+            if(key == 1){
+                EventHandler.GUI_OPENED = false;
+            }
+
             super.keyTyped(key, keycode);
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,6 +54,7 @@ public class InsertNameGui extends GuiScreen {
         if(keycode == 28){
             EventHandler.PLAYER.setCustomNameTag(this.textBox.getText());
             try {
+                EventHandler.GUI_OPENED = false;
                 super.keyTyped(key, 1);
             } catch (IOException e) {
                 e.printStackTrace();
